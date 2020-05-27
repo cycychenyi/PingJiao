@@ -1,0 +1,6 @@
+click
+lxml
+pip-chill
+pyexecjs
+requests
+selenium
