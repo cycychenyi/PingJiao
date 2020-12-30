@@ -29,9 +29,9 @@ def login(driver: Chrome, username: str, password: str) -> None:
     username_input.send_keys(username)
     password_input = driver.find_element_by_xpath('//*[@id="password"]')
     password_input.send_keys(password)
-    login_button = driver.find_element_by_xpath('//*[@id="casLoginForm"]/p[5]/button')
-    login_button.click()
-
+    time.sleep(10)
+    #login_button = driver.find_element_by_xpath('//*[@id="casLoginForm"]/p[5]/button')
+    #login_button.click()
 
 def pingjia(driver: Chrome) -> None:
     # 限制不能给满分，第一个选项四星
@@ -50,7 +50,7 @@ def pingjia(driver: Chrome) -> None:
     close_button.click()
 
 
-def pingjia_per_page(driver: Chrome, all_pingjiaed: bool, count: int) -> int:
+def pingjia_per_page(driver: Chrome, all_pingjiaed: bool, count: int) -> tuple:
     kcs = driver.find_elements_by_xpath('//*[@id="pjkc"]/tr')
     for kc in kcs:
         if not all_pingjiaed:
@@ -62,7 +62,7 @@ def pingjia_per_page(driver: Chrome, all_pingjiaed: bool, count: int) -> int:
         all_pingjiaed = False
         count += 1
         time.sleep(3)
-    return count
+    return count, all_pingjiaed
 
 
 @click.command()
@@ -79,9 +79,10 @@ def pingjiao(username: str, password: str) -> int:
         driver.get('http://s.ugsq.whu.edu.cn/studentpj')
         driver.find_element_by_xpath('//*[@id="task-list"]/li').click()
         # 首页
-        count = pingjia_per_page(driver, all_pingjiaed, count)
+        count, all_pingjiaed = pingjia_per_page(driver, all_pingjiaed, count)
         if not all_pingjiaed:
             continue
+        print("Entering Remain")  # 更新all_pingjiaed flag
         # 剩余页
         pages = driver.find_elements_by_xpath('//*[@id="tb1_wrapper"]/div/ul/li/a')[2:-1]
         for page in pages:
@@ -89,7 +90,7 @@ def pingjiao(username: str, password: str) -> int:
                 break
             page.click()
             time.sleep(3)
-            count = pingjia_per_page(driver, all_pingjiaed, count)
+            count,all_pingjiaed = pingjia_per_page(driver, all_pingjiaed, count)
 
     print(f'共评价了 {count} 门课程')
     return count
