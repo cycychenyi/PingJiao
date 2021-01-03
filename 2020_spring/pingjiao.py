@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-
 import os
 import platform
 import time
@@ -46,53 +45,63 @@ def pingjia(driver: Chrome) -> None:
     submit_button = driver.find_element_by_xpath('//*[@id="pjsubmit"]')
     submit_button.click()
     # 评教成功后关闭弹窗
+    time.sleep(1)
     close_button = driver.find_element_by_xpath('//*[@id="finishDlg"]/div[2]/button')
     close_button.click()
 
 
-def pingjia_per_page(driver: Chrome, all_pingjiaed: bool, count: int) -> int:
+# 是否当前页面评教完成
+def pingjiaed(driver: Chrome, page_pingjiaed: bool):
     kcs = driver.find_elements_by_xpath('//*[@id="pjkc"]/tr')
+    page_pingjiaed = True
     for kc in kcs:
-        if not all_pingjiaed:
-            break
+        if kc.find_element_by_xpath('td[5]').text != '已评价':
+            page_pingjiaed = False
+    return page_pingjiaed
+
+
+def pingjia_per_page(driver: Chrome, page_pingjiaed: bool, count: int):
+    kcs = driver.find_elements_by_xpath('//*[@id="pjkc"]/tr')
+    page_pingjiaed = pingjiaed(driver, page_pingjiaed)  # 当前界面评教完成
+    if page_pingjiaed is True:
+        return page_pingjiaed, count
+    # 当前界面未评教完成，从中选择一个评教
+    for kc in kcs:
         if kc.find_element_by_xpath('td[5]').text == '已评价':
             continue
         kc.find_element_by_xpath('td[6]/a').click()
         pingjia(driver)
-        all_pingjiaed = False
         count += 1
-        time.sleep(3)
-    return count
+        break
+    return page_pingjiaed, count
 
 
 @click.command()
 @click.option('--username', prompt='学号')
 @click.option('--password', prompt='信息门户密码（默认身份证后 6 位）')
-def pingjiao(username: str, password: str) -> int:
+def pingjiao(username: str, password: str):
     count = 0
+    page_pingjiaed = False
+    rpage = 0  # 当前评教界面
     driver = init_driver()
     login(driver, username, password)
-    all_pingjiaed = False
-
-    while not all_pingjiaed:
-        all_pingjiaed = True
-        driver.get('http://s.ugsq.whu.edu.cn/studentpj')
-        driver.find_element_by_xpath('//*[@id="task-list"]/li').click()
-        # 首页
-        count = pingjia_per_page(driver, all_pingjiaed, count)
-        if not all_pingjiaed:
-            continue
-        # 剩余页
-        pages = driver.find_elements_by_xpath('//*[@id="tb1_wrapper"]/div/ul/li/a')[2:-1]
-        for page in pages:
-            if not all_pingjiaed:
-                break
-            page.click()
-            time.sleep(3)
-            count = pingjia_per_page(driver, all_pingjiaed, count)
+    driver.get('http://s.ugsq.whu.edu.cn/studentpj')
+    driver.find_element_by_xpath('//*[@id="task-list"]/li').click()
+    time.sleep(3)
+    while True:
+        pages = driver.find_elements_by_xpath('//*[@id="tb1_wrapper"]/div/ul/li/a')[1:-1]
+        page = pages[rpage]
+        page.click()
+        time.sleep(2)
+        page_pingjiaed, count = pingjia_per_page(driver, page_pingjiaed, count)
+        if page_pingjiaed is True:
+            rpage += 1
+            page_pingjiaed = False
+        if rpage + 1 > len(pages):
+            break
 
     print(f'共评价了 {count} 门课程')
-    return count
+    return
 
 
 if __name__ == '__main__':
