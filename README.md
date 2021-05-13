@@ -58,4 +58,4 @@ chromedriver 目录下的 chromedriver.exe 和 chromedriver 对应 83 版本的 
 
 ## 其他
 
-本仓库不再维护，请自行调试。如有需要，可以参考 #3 和 #4，因不方便调试没有合并，感谢 @Justin62628 和 @Crescentm 的贡献！
+本仓库不再维护，请自行调试。如有需要，可以参考 https://github.com/cycychenyi/PingJiao/pull/3 和 https://github.com/cycychenyi/PingJiao/pull/4 ，因不方便调试没有合并，感谢 https://github.com/Justin62628 和 https://github.com/Crescentm 的贡献！
