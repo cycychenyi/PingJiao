@@ -55,3 +55,7 @@ git clone https://github.com/cycychenyi/PingJiao.git
 chromedriver 目录下的 chromedriver.exe 和 chromedriver 对应 83 版本的 Chrome，其它版本请自行下载。
 
 4. 运行 pingjiao.py。
+
+## 其他
+
+本仓库不再维护，请自行调试。如有需要，可以参考 #3 和 #4，因不方便调试没有合并，感谢 @Justin62628 和 @Crescentm 的贡献！
