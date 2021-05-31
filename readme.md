@@ -1,3 +1,30 @@
+## 武汉大学评教脚本 v2.0
+
+改用 Selenium，用于 2020 年春季评教。
+
+**使用**
+
+1. 安装 Python。
+2. 安装第三方库。
+
+```bash
+pip install click selenium
+# 或者
+pip install -r requirements.txt
+```
+
+3. 克隆仓库。
+
+```bash
+git clone https://github.com/cycychenyi/PingJiao.git
+```
+
+chromedriver 目录下的 chromedriver.exe 和 chromedriver 对应 91 版本的 Chrome，其它版本请自行下载。
+
+下载链接: https://chromedriver.storage.googleapis.com/index.html
+
+4. 运行 pingjiao.py。
+
 ## 武汉大学评教脚本 v1.0
 
 用 Python 写的脚本，用于 2019 年秋季评教。
@@ -31,27 +58,3 @@ git clone https://github.com/cycychenyi/PingJiao.git
 
 <div align="center"><img src="https://i.loli.net/2019/12/15/rj3ApLq6Zfwig9D.png" style="zoom:80%;" /></div>
 
-## 武汉大学评教脚本 v2.0
-
-改用 Selenium，用于 2020 年春季评教。
-
-**使用**
-
-1. 安装 Python。
-2. 安装第三方库。
-
-```bash
-pip install click selenium
-# 或者
-pip install -r requirements.txt
-```
-
-3. 克隆仓库。
-
-```bash
-git clone https://github.com/cycychenyi/PingJiao.git
-```
-
-chromedriver 目录下的 chromedriver.exe 和 chromedriver 对应 83 版本的 Chrome，其它版本请自行下载。
-
-4. 运行 pingjiao.py。

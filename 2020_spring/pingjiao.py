@@ -14,9 +14,11 @@ def init_driver() -> Chrome:
     chrome_options = Options()
     # chrome_options.add_argument('--headless')
     if 'Windows' in platform.platform():
-        executable_path = os.path.join(os.path.dirname(__file__), 'chromedriver.exe')
+        executable_path = os.path.join(os.path.dirname(__file__),
+                                       'chromedriver.exe')
     else:
-        executable_path = os.path.join(os.path.dirname(__file__), 'chromedriver')
+        executable_path = os.path.join(os.path.dirname(__file__),
+                                       'chromedriver')
     driver = Chrome(executable_path=executable_path, options=chrome_options)
     driver.implicitly_wait(3)
     return driver
@@ -28,25 +30,30 @@ def login(driver: Chrome, username: str, password: str) -> None:
     username_input.send_keys(username)
     password_input = driver.find_element_by_xpath('//*[@id="password"]')
     password_input.send_keys(password)
-    login_button = driver.find_element_by_xpath('//*[@id="casLoginForm"]/p[5]/button')
+    login_button = driver.find_element_by_xpath(
+        '//*[@id="casLoginForm"]/p[2]/button')
     login_button.click()
 
 
 def pingjia(driver: Chrome) -> None:
     # 限制不能给满分，第一个选项四星
-    driver.find_element_by_xpath('//div[@class="controls" and label[@class="radio"]]/label[2]').click()
+    driver.find_element_by_xpath(
+        '//div[@class="controls" and label[@class="radio"]]/label[2]').click()
     # 其他选项全部五星
-    labels = driver.find_elements_by_xpath('//div[@class="controls" and label[@class="radio"]]/label[1]')[1:]
+    labels = driver.find_elements_by_xpath(
+        '//div[@class="controls" and label[@class="radio"]]/label[1]')[1:]
     for label in labels:
         label.click()
     # 意见填无
-    textarea = driver.find_element_by_xpath('//*[@id="pjnr"]/li[7]/fieldset/ol/li/div[3]/div/textarea')
+    textarea = driver.find_element_by_xpath(
+        '//*[@id="pjnr"]/li[7]/fieldset/ol/li/div[3]/div/textarea')
     textarea.send_keys('无')
     submit_button = driver.find_element_by_xpath('//*[@id="pjsubmit"]')
     submit_button.click()
     # 评教成功后关闭弹窗
     time.sleep(1)
-    close_button = driver.find_element_by_xpath('//*[@id="finishDlg"]/div[2]/button')
+    close_button = driver.find_element_by_xpath(
+        '//*[@id="finishDlg"]/div[2]/button')
     close_button.click()
 
 
@@ -85,11 +92,12 @@ def pingjiao(username: str, password: str):
     rpage = 0  # 当前评教界面
     driver = init_driver()
     login(driver, username, password)
-    driver.get('http://s.ugsq.whu.edu.cn/studentpj')
+    driver.get('https://ugsqs.whu.edu.cn/studentpj')
     driver.find_element_by_xpath('//*[@id="task-list"]/li').click()
     time.sleep(3)
     while True:
-        pages = driver.find_elements_by_xpath('//*[@id="tb1_wrapper"]/div/ul/li/a')[1:-1]
+        pages = driver.find_elements_by_xpath(
+            '//*[@id="tb1_wrapper"]/div/ul/li/a')[1:-1]
         page = pages[rpage]
         page.click()
         time.sleep(2)
